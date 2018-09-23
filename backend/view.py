@@ -4,7 +4,7 @@ from flask import request
 import db
 from assets import Transaction
 from constants import NAME_TO_ID
-from utils import calc_tx_md5
+from utils import get_visitor
 
 
 def get_assets():
@@ -12,23 +12,32 @@ def get_assets():
 
 
 def get_transactions(owner):
-    r = db.getdb().txs.find({'owner': owner}, {'_id': False})
-    return {
-        'transactions': [Transaction.parse(t['tx']).as_dict() for t in r]
-    }
-    txs = TXS.get(owner, [])
+    txs = db.get_txs(owner)
+    for tx in txs:
+        tx.update(Transaction.parse(tx['tx']).as_dict())
+        del tx['tx']
     return {'transactions': txs}
 
 
-def add_tx(owner, tx):
-    db.update_tx(owner, tx)
+def post_tx(owner):
+    if get_visitor() != owner:
+        return 'unauthorized', 401
+    tx = request.data
+    tx_id = db.insert_tx(owner, tx)
+    return tx_id
 
 
-def delete_tx(owner, tx):
-    db.getdb().txs.remove({
-        'owner': owner,
-        '_id': calc_tx_md5(tx),
-    })
+def put_tx(owner, tx_id):
+    if get_visitor() != owner:
+        return 'unauthorized', 401
+    tx = request.data
+    return db.update_tx(owner, tx_id, tx)
+
+
+def delete_tx(owner, tx_id):
+    if get_visitor() != owner:
+        return 'unauthorized', 401
+    db.remove_tx(owner, tx_id)
 
 
 def get_prices():

@@ -4,6 +4,7 @@ import traceback
 import datetime
 import hashlib
 
+import jwt
 from flask import request
 
 import conf
@@ -29,5 +30,11 @@ def guarded(viewfunc):
     return wrapped
 
 
-def calc_tx_md5(tx):
-    return hashlib.md5('  '.join(tx.strip().split('  ')[:2])).hexdigest()
+def get_visitor():
+    try:
+        token = request.cookies.get('token')
+        user = jwt.decode(token, conf.auth_pubkey, algorithm='RS512')
+        return user['username']
+    except Exception:
+        traceback.print_exc()
+        return None

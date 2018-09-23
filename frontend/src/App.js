@@ -5,10 +5,11 @@ import {
   message,
 } from 'antd';
 import moment from 'moment';
-import qs from 'query-string';
+import qs from 'qs';
 import Cookies from 'js-cookie';
 import jwtDecode from 'jwt-decode';
 import { Assets, Transaction } from './assets';
+import api from './api';
 import 'antd/dist/antd.css';
 import './index.css';
 import './edit.css';
@@ -356,11 +357,13 @@ export default class App extends React.Component {
     const owner = this.state.owner;
     const res = await fetch(`./api/transactions/${owner}`);
     if (res.status === 200) {
-      return (await res.json()).transactions.map(tx => {
+      const txs = (await res.json()).transactions.map(tx => {
         tx.src.amount = parseFloat(tx.src.amount);
         tx.dst.amount = parseFloat(tx.dst.amount);
-        return new Transaction(tx.ctime, tx.src, tx.dst);
+        return new Transaction(tx.ctime, tx.src, tx.dst, tx.comment, tx.id);
       });
+      console.log('transactions', txs);
+      return txs;
     }
   }
 
@@ -388,6 +391,7 @@ export default class App extends React.Component {
       dstUnit: tx.dst.unit,
       dateMoment: moment(dateStr, DATE_FORMAT),
       timeMoment: moment(timeStr, TIME_FORMAT),
+      comment: tx.comment,
     };
 
     this.setState({
@@ -407,10 +411,24 @@ export default class App extends React.Component {
         ctime,
         {amount: tx.srcAmount, unit: tx.srcUnit.toLowerCase()},
         {amount: tx.dstAmount, unit: tx.dstUnit.toLowerCase()},
+        tx.comment,
       );
 
-      const res = await fetch(`./api/tx/${this.state.owner}/${newTx.asStr()}`);
-      if (res.status !== 200) {
+      let res;
+      if (tx.new) {
+        const url = `./api/tx/${this.state.owner}`;
+        res = await api.post(url, newTx.asStr());
+      } else {
+        const txId = this.state.transactions[this.state.editingTxIndex].id;
+        const url = `./api/tx/${this.state.owner}/${txId}`;
+        res = await api.put(url, newTx.asStr());
+      }
+      if (res.status === 200) {
+        const txId = await res.text();
+        newTx.id = txId;
+        console.log(newTx);
+        message.success('Saved');
+      } else {
         message.error('Error: ' + await res.text());
         return;
       }
@@ -457,10 +475,15 @@ export default class App extends React.Component {
     if (editingTx) {
       const tx = this.state.transactions[this.state.editingTxIndex];
       const res = await fetch(
-        `./api/tx/${this.state.owner}/${tx.asStr()}`,
-        {method: 'DELETE'}
+        `./api/tx/${this.state.owner}/${tx.id}`,
+        {
+          method: 'DELETE',
+          credentials: 'include',
+        }
       );
-      if (res.status !== 200) {
+      if (res.status === 200) {
+        message.success('Delete');
+      } else {
         message.error('Error: ', await res.text());
         return;
       }

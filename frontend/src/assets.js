@@ -1,9 +1,10 @@
 export class Transaction {
-  constructor(ctime, src, dst, comment) {
+  constructor(ctime, src, dst, comment, id) {
     this.ctime = ctime;
     this.src = src;
     this.dst = dst;
     this.comment = comment || '';
+    this.id = id;
   }
 
   isBuy = () => {

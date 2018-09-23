@@ -26,12 +26,13 @@ class Transaction(object):
         else:
             tx_type = 'sell'
             dst, src= map(make_value, exchange_str.split('<='))
-        return Transaction(ctime, src, dst)
+        return Transaction(ctime, src, dst, comment)
 
-    def __init__(self, ctime, src, dst):
+    def __init__(self, ctime, src, dst, comment):
         self.ctime = ctime
         self.src = src
         self.dst = dst
+        self.comment = comment
 
     @property
     def type(self):
@@ -64,6 +65,7 @@ class Transaction(object):
                 'amount': str(self.dst['amount']),
                 'unit': self.dst['unit'],
             },
+            'comment': self.comment,
         }
 
 
