@@ -7,6 +7,12 @@ from constants import NAME_TO_ID
 from utils import get_visitor
 
 
+def get_raw_txs():
+    txs = db.getdb().txs.find({}).sort([('owner', 1), ('tx', 1)])
+    txs = [u'{:8}  {}'.format(tx['owner'], tx['tx']) for tx in txs]
+    return u'<pre>{}</pre>'.format('\n'.join(txs))
+
+
 def get_transactions(owner):
     txs = db.get_txs(owner)
     for tx in txs:

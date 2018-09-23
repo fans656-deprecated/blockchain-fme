@@ -68,6 +68,9 @@ class Transaction(object):
             'comment': self.comment,
         }
 
+    def __str__(self):
+        s
+
 
 class Crypto(object):
 
