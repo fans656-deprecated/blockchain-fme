@@ -1,0 +1,13 @@
+.transaction span:not(:last-child) {
+  margin-right: 1em;
+}
+
+.transaction .date {
+  margin-right: 2em;
+}
+
+.transaction .edit {
+  position: absolute;
+  right: 0;
+}
+

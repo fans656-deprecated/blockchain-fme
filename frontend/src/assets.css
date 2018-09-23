@@ -1,0 +1,60 @@
+.assets .coin {
+  font-family: 'Consolas';
+  display: flex;
+  align-items: center;
+  padding: .7em;
+}
+
+.assets .coin:not(:last-child) {
+  border-bottom: 1px solid #ddd;
+}
+
+.assets .coin .name-amount {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.assets .coin .name-amount .name {
+  font-size: 2em;
+}
+
+.assets .coin .name-amount .amount {
+  font-size: .9em;
+}
+
+.assets .coin .current-info {
+  width: 18em;
+}
+
+.summary {
+  margin-bottom: 1em;
+}
+
+.label {
+  display: inline-block;
+  width: 4em;
+  text-align: right;
+}
+
+.money, .percent {
+  display: inline-block;
+  width: 8em;
+  text-align: right;
+}
+
+.loaded .inc .colored {
+  color: #3B9531;
+}
+
+.loaded .dec .colored {
+  color: #DD3131;
+}
+
+.history-info {
+  align-items: flex-end;
+}
+
+.current.money {
+  color: #ccc;
+}

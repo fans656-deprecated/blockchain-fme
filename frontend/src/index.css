@@ -1,0 +1,75 @@
+html, body, #root {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  font-family: Consolas;
+}
+
+.App {
+  min-height: 100%;
+  padding: 1em;
+  background: white !important;
+  display: flex;
+  align-items: space-between;
+}
+
+.content {
+  background: white;
+  flex: 1;
+}
+
+.even {
+  display: flex;
+  justify-content: space-between;
+}
+
+.even > * {
+  flex: 1;
+}
+
+.even > *:not(:last-child) {
+  margin-right: 1em;
+}
+
+.edit-dialog .ant-modal-content {
+  min-height: 500px;
+}
+
+.bottom-actions {
+  position: sticky;
+  bottom: 0;
+}
+
+.vert {
+  display: flex;
+  flex-direction: column;
+}
+
+.horz {
+  display: flex;
+}
+
+.left {
+  align-items: flex-start;
+}
+
+.right {
+  align-items: flex-end;
+}
+
+.small {
+  font-size: .85em;
+}
+
+.large {
+  font-size: 1.5em;
+}
+
+.value {
+  display: inline-block;
+  min-width: 5em;
+  text-align: right;
+}

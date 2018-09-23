@@ -1,0 +1,48 @@
+.edit-tx-form {
+  width: 100%;
+  margin: .5em 0 !important;
+}
+
+.edit-tx-form > *:not(:last-child) {
+  margin-bottom: 1em !important;
+}
+
+.edit-tx-form > *:last-child {
+  margin-bottom: 0 !important;
+}
+
+.buttons > *:not(:last-child) {
+  margin-right: 1em;
+}
+
+.right.buttons {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.edit-tx-form .number-unit {
+  display: flex;
+  justify-content: space-between;
+}
+
+.edit-tx-form .number-unit .number {
+  flex: 1;
+  margin-right: 1em;
+}
+
+.edit-tx-form .unit {
+  width: 6em !important;
+}
+
+.edit-tx-form .buy-sell {
+  display: flex;
+  justify-content: space-between;
+}
+
+.edit-tx-form .buy-sell > * {
+  flex: 1;
+}
+
+.edit-icon {
+  cursor: pointer;
+}
