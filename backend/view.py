@@ -7,10 +7,6 @@ from constants import NAME_TO_ID
 from utils import get_visitor
 
 
-def get_assets():
-    owner = request.args.get('owner', 'fans656')
-
-
 def get_transactions(owner):
     txs = db.get_txs(owner)
     for tx in txs:

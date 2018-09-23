@@ -58,3 +58,7 @@
 .current.money {
   color: #ccc;
 }
+
+.large-info {
+  width: 9em;
+}

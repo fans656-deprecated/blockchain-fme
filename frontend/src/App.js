@@ -144,7 +144,7 @@ export default class App extends React.Component {
     let largeInfo;
     if (coin.netCost()) {
       largeInfo = (
-        <div className="vert right">
+        <div className="large-info vert right">
           <Percent className="large colored" value={percent}/>
           <Money className="colored"
             value={coin.currentValue() - coin.netCost()}
@@ -153,7 +153,7 @@ export default class App extends React.Component {
       );
     } else {
       largeInfo = (
-        <div className="vert right">
+        <div className="large-info vert right">
           <Money className="large colored" value={coin.currentValue()}/>
         </div>
       );
