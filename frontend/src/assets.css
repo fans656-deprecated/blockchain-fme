@@ -39,7 +39,7 @@
 
 .money, .percent {
   display: inline-block;
-  width: 8em;
+  width: 7em;
   text-align: right;
 }
 
@@ -60,5 +60,5 @@
 }
 
 .large-info {
-  width: 9em;
+  width: 8em;
 }
