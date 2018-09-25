@@ -326,6 +326,7 @@ export default class App extends React.Component {
       txs = await this.fetchTransactions();
       if (!txs) {
         message.error('Load assets failed');
+        this.setState({refreshing: false});
         return;
       }
     }
@@ -344,6 +345,7 @@ export default class App extends React.Component {
     const prices = await this.fetchPrices(assets.coins());
     if (!prices) {
       message.error('Load prices failed');
+      this.setState({refreshing: false});
       return;
     }
     assets.updatePrices(prices);
@@ -431,6 +433,7 @@ export default class App extends React.Component {
         message.success('Saved');
       } else {
         message.error('Error: ' + await res.text());
+        this.setState({refreshing: false});
         return;
       }
 
@@ -486,6 +489,7 @@ export default class App extends React.Component {
         message.success('Delete');
       } else {
         message.error('Error: ', await res.text());
+        this.setState({refreshing: false});
         return;
       }
     }
