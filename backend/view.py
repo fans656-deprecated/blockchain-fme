@@ -14,10 +14,14 @@ def get_raw_txs():
 
 
 def get_transactions(owner):
-    txs = db.get_txs(owner)
-    for tx in txs:
-        tx.update(Transaction.parse(tx['tx']).as_dict())
-        del tx['tx']
+    txs = []
+    for tx in db.get_txs(owner):
+        try:
+            tx.update(Transaction.parse(tx['tx']).as_dict())
+            del tx['tx']
+            txs.append(tx)
+        except Exception:
+            pass
     return {'transactions': txs}
 
 
@@ -25,6 +29,8 @@ def post_tx(owner):
     if get_visitor() != owner:
         return 'unauthorized', 401
     tx = request.data
+    if not Transaction.is_valid(tx):
+        return 'bad tx', 400
     tx_id = db.insert_tx(owner, tx)
     return tx_id
 

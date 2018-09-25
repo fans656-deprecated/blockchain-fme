@@ -28,6 +28,14 @@ class Transaction(object):
             dst, src= map(make_value, exchange_str.split('<='))
         return Transaction(ctime, src, dst, comment)
 
+    @staticmethod
+    def is_valid(tx):
+        try:
+            Transaction.parse(tx)
+            return True
+        except Exception:
+            return False
+
     def __init__(self, ctime, src, dst, comment):
         self.ctime = ctime
         self.src = src
