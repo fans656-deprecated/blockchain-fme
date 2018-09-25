@@ -177,6 +177,7 @@ export default class App extends React.Component {
         <div className="history-info vert">
           <Money value={coin.cost}/>
           <Money value={coin.gain}/>
+          <Money value={coin.gain - coin.cost}/>
           <Percent value={roi}/>
         </div>
       </div>
