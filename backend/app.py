@@ -1,5 +1,6 @@
 from flask import *
 
+import db
 import conf
 import utils
 from endpoints import endpoints
@@ -10,8 +11,12 @@ app = Flask(__name__, static_folder='../frontend/build')
 
 @app.after_request
 def after_request(r):
-    r.headers['Cache-Control'] = 'no-cache'
+    if conf.debugging:
+        r.headers['Cache-Control'] = 'no-cache'
     return r
+
+
+app.teardown_appcontext(db.closedb)
 
 
 for method, path, viewfunc in endpoints:

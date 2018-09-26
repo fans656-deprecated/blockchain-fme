@@ -1,11 +1,22 @@
 import pymongo
+from flask import g
 from bson.objectid import ObjectId
 
 
-def getdb(g={}):
+def getclient():
     if 'db' not in g:
-        g['db'] = pymongo.MongoClient().blockchain
-    return g['db']
+        g.db = pymongo.MongoClient()
+    return g.db
+
+
+def getdb():
+    return getclient().blockchain
+
+
+def closedb(e=None):
+    db = g.pop('db', None)
+    if db:
+        db.close()
 
 
 def get_txs(owner):
