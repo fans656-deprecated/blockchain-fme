@@ -2,8 +2,13 @@ import pymongo
 from flask import g
 from bson.objectid import ObjectId
 
+import conf
+from constants import TXS_TEXT
+
 
 def getclient():
+    if conf.debugging:
+        return pymongo.MongoClient()
     if 'db' not in g:
         g.db = pymongo.MongoClient()
     return g.db
@@ -53,18 +58,19 @@ def remove_tx(owner, tx_id):
     })
 
 
-if __name__ == '__main__':
-    from constants import TXS
-
-    txs = get_txs('tyn')
-    for tx in txs:
-        print tx
-
-    #r = getdb().txs.find({})
-    #for tx in r:
-    #    print tx
-
+def populate_db():
     getdb().txs.remove({})
-    for owner, lines in TXS.items():
-        for tx in lines:
-            insert_tx(owner, tx)
+    lines = TXS_TEXT.split('\n')
+    for line in lines:
+        parts = filter(bool, line.split('  '))
+        parts = [part.strip() for part in parts]
+        owner = parts[0]
+        tx = '  '.join(parts[1:])
+        insert_tx(owner, tx)
+
+
+if __name__ == '__main__':
+    #populate_db()
+    r = getdb().txs.find({})
+    for tx in r:
+        print tx

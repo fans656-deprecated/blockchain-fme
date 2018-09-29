@@ -189,9 +189,6 @@ export class Assets {
       this.currentValue += coin.currentValue();
     }
     this.percent = this.netCost ? this.currentValue / this.netCost : 0;
-
-    console.log(coins);
-    console.log(prices);
   }
 
   getAsset = (unit) => {

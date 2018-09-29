@@ -1,0 +1,41 @@
+.coin {
+  font-family: 'Consolas';
+}
+
+.coin:not(:last-child) {
+  border-bottom: 1px solid #ddd;
+}
+
+.coin .coin-summary {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: .7em;
+}
+
+.coin .coin-detail {
+  margin-bottom: 1em;
+}
+
+.assets .coin .name-amount {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.assets .coin .name-amount .name {
+  font-size: 2em;
+}
+
+.assets .coin .name-amount .amount {
+  font-size: .9em;
+}
+
+.assets .coin .current-info {
+  width: 18em;
+}
+
+.coin .expand-icon {
+  font-size: 1.5em;
+  cursor: pointer;
+}

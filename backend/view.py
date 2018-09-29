@@ -2,8 +2,9 @@ import grequests
 from flask import request
 
 import db
+import conf
 from assets import Transaction
-from constants import NAME_TO_ID
+from constants import NAME_TO_ID, MOCKED_PRICES
 from utils import get_visitor
 
 
@@ -49,6 +50,8 @@ def delete_tx(owner, tx_id):
 
 
 def get_prices():
+    if conf.debugging:
+        return MOCKED_PRICES
     coin_names = request.args.get('coins', '').split(',')
     coin_names = [name.lower() for name in coin_names]
     currencies = request.args.get('currencies', 'cny').split(',')

@@ -1,7 +1,7 @@
 import React from 'react';
 import {
   Layout, Tabs, Button, List, Form, DatePicker, TimePicker,
-  Icon, Select, Input, InputNumber, Radio, Spin,
+  Icon, Input, InputNumber, Spin,
   message,
 } from 'antd';
 import moment from 'moment';
@@ -9,6 +9,8 @@ import qs from 'qs';
 import Cookies from 'js-cookie';
 import jwtDecode from 'jwt-decode';
 import { Assets, Transaction } from './assets';
+import { Money, Percent } from './misc';
+import Coin from './Coin';
 import api from './api';
 import 'antd/dist/antd.css';
 import './index.css';
@@ -81,33 +83,30 @@ export default class App extends React.Component {
     }
 
     const coins = assets.coins();
-    const coinComps = coins.map(this.renderCoin);
+    const coinComps = coins.map(coin => <Coin key={coin.unit} coin={coin}/>);
 
     const inc = assets.netCost ? assets.percent > 1 : true;
+    const color = inc ? 'green' : 'red';
 
     return (
       <div className={`assets ` + (this.state.pricesLoaded ? 'loaded' : '')}>
-        <div className={`summary horz even ` + (inc ? 'inc' : 'dec')}>
+        <div className="summary horz even">
           <div className="vert">
             <div>
               <span className="label">Asset:</span>
-              <span className="colored">
-                <Money value={assets.currentValue}/>
-              </span>
+              <Money className={color} value={assets.currentValue}/>
             </div>
             <div>
               <span className="label">Cost:</span>
-              <Money value={assets.netCost}/>
+              <Money className={color} value={assets.netCost}/>
             </div>
             <div>
               <span className="label">Diff:</span>
-              <Money className="colored"
-                value={assets.currentValue - assets.netCost}
-              />
+              <Money value={assets.currentValue - assets.netCost}/>
             </div>
             <div>
               <span className="label">Percent:</span>
-              <Percent className="colored" value={assets.percent}/>
+              <Percent className={color}value={assets.percent}/>
             </div>
           </div>
           <div className="vert">
@@ -135,53 +134,6 @@ export default class App extends React.Component {
   }
 
   renderCoin = (coin) => {
-    const percent = coin.currentPercent();
-    const inc = coin.netCost() ? percent > 1 : true; 
-
-    const netReturn = coin.gain - coin.cost;
-    const roi = coin.cost ? netReturn / coin.cost : 0;
-
-    let largeInfo;
-    if (coin.netCost()) {
-      largeInfo = (
-        <div className="large-info vert right">
-          <Percent className="large colored" value={percent}/>
-          <Money className="colored"
-            value={coin.currentValue() - coin.netCost()}
-          />
-        </div>
-      );
-    } else {
-      largeInfo = (
-        <div className="large-info vert right">
-          <Money className="large colored" value={coin.currentValue()}/>
-        </div>
-      );
-    }
-
-    return (
-      <div key={coin.name()}
-        className={`coin horz small ` + (inc ? 'inc' : 'dec')}
-      >
-        <div className="name-amount vert">
-          <span className="name colored">{coin.name()}</span>
-          <span className="amount">{coin.amount.toFixed(2)}</span>
-        </div>
-        {largeInfo}
-        <div className="vert">
-          <Money className="colored" value={coin.currentValue()}/>
-          <Money value={coin.netCost()}/>
-          <Money className="colored" value={coin.currentPrice()}/>
-          <Money value={coin.costPrice()}/>
-        </div>
-        <div className="history-info vert">
-          <Money value={coin.cost}/>
-          <Money value={coin.gain}/>
-          <Money value={coin.gain - coin.cost}/>
-          <Percent value={roi}/>
-        </div>
-      </div>
-    );
   }
 
   renderTransactions = (txs) => {
@@ -365,7 +317,6 @@ export default class App extends React.Component {
         tx.dst.amount = parseFloat(tx.dst.amount);
         return new Transaction(tx.ctime, tx.src, tx.dst, tx.comment, tx.id);
       });
-      console.log('transactions', txs);
       return txs;
     }
   }
@@ -529,32 +480,6 @@ export default class App extends React.Component {
       return null;
     }
   }
-}
-
-const Money = ({value, unit, className}) => {
-  return (
-    <div className={`money ` + className}>
-      <span className="value">{value ? value.toFixed(2) : '--'}</span>
-      <span>{unit}</span>
-    </div>
-  );
-}
-
-const Percent = ({value, className}) => {
-  value *= 100;
-  let repr = null;
-  if (!value) {
-    repr = '--';
-  } else if (value < 10000) {
-    repr = value.toFixed(2) + '%';
-  } else {
-    repr = (value / 100).toFixed(2) + 'X';
-  }
-  return (
-    <div className={`percent ` + className}>
-      <span className="value">{repr}</span>
-    </div>
-  );
 }
 
 const DATE_FORMAT = 'YYYY-MM-DD';
